@@ -1,0 +1,123 @@
+body {
+
+  font-family: Arial;
+
+  background: #0f172a;
+
+  color: white;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  min-height: 100vh;
+
+  margin: 0;
+}
+
+.container {
+
+  background: #1e293b;
+
+  padding: 30px;
+
+  border-radius: 15px;
+
+  width: 350px;
+
+  box-shadow:
+    0 0 20px rgba(0,0,0,.4);
+}
+
+input,
+button {
+
+  width: 100%;
+
+  padding: 12px;
+
+  margin-top: 10px;
+
+  border: none;
+
+  border-radius: 10px;
+}
+
+button {
+
+  background: #3b82f6;
+
+  color: white;
+
+  cursor: pointer;
+
+  font-weight: bold;
+}
+
+button:hover {
+
+  background: #2563eb;
+}
+
+.leaderboard-card {
+
+  background: #334155;
+
+  padding: 10px;
+
+  margin-top: 10px;
+
+  border-radius: 10px;
+}
+
+a {
+
+  color: #60a5fa;
+}
+
+/* Lesson list cards */
+.lesson-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+.lesson-card.done { background: #f0fdf4; border-color: #86efac; }
+.lesson-card-info { display: flex; flex-direction: column; gap: 4px; }
+.lesson-subject { font-size: 12px; color: #888; }
+.lesson-card-right { display: flex; align-items: center; gap: 10px; }
+.badge-done    { font-size: 12px; color: #15803d; }
+.badge-pending { font-size: 12px; color: #92400e; }
+
+/* Lesson reader */
+.lesson-body { font-size: 15px; line-height: 1.7; color: #333; }
+.lesson-section { margin-bottom: 28px; }
+.lesson-section h2 {
+  font-size: 17px; font-weight: 600;
+  border-left: 4px solid #4f46e5;
+  padding-left: 10px; margin-bottom: 10px;
+}
+.example-box {
+  background: #f0f4ff; border: 1px solid #c7d2fe;
+  border-radius: 8px; padding: 12px 16px; margin: 10px 0;
+}
+.example-label { font-weight: 600; color: #4f46e5; margin-bottom: 4px; }
+.rule-box {
+  background: #fff7ed; border: 1px solid #fed7aa;
+  border-radius: 8px; padding: 10px 16px;
+  margin: 10px 0; color: #92400e; font-weight: 500;
+}
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+.col-card { border-radius: 8px; padding: 12px; font-size: 14px; }
+.col-card.green { background: #f0fdf4; border: 1px solid #86efac; }
+.col-card.red   { background: #fef2f2; border: 1px solid #fca5a5; }
+.col-label { font-weight: 600; margin-bottom: 4px; }
+.col-card.green .col-label { color: #15803d; }
+.col-card.red   .col-label { color: #b91c1c; }
+.col-note { font-size: 12px; color: #666; margin-top: 4px; }
