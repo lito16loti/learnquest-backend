@@ -64,9 +64,10 @@ app.use(limiter);
    DATABASE
 ===================== */
 
-mongoose.connect(
-  process.env.MONGO_URI
-)
+mongoose.connect(process.env.MONGO_URI, {
+  tls: true,
+  tlsAllowInvalidCertificates: true
+})
 .then(() => {
 
   console.log(
