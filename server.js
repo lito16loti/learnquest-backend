@@ -41,17 +41,11 @@ const app = express();
 
 app.use(cors({
   origin: [
-<<<<<<< HEAD
     "http://127.0.0.1:5500",
     "https://incredible-kataifi-f45241.netlify.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
-=======
-    "http://127.0.0.1:5500",                        // local dev
-    "https://incredible-kataifi-f45241.netlify.app"          // your netlify URL
-  ]
->>>>>>> 6a0c5d6d24d7db4c072df15b956f279b0d5a7551
 }));
 
 app.use(express.json());
