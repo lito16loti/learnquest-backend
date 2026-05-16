@@ -40,8 +40,10 @@ const app = express();
 ===================== */
 
 app.use(cors({
-  origin:
-    "http://127.0.0.1:5500"
+  origin: [
+    "http://127.0.0.1:5500",                        // local dev
+    "https://learnquest-abc123.netlify.app"          // your netlify URL
+  ]
 }));
 
 app.use(express.json());
