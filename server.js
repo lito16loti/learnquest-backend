@@ -42,8 +42,10 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://your-site-name.netlify.app"  // ← your actual Netlify URL
-  ]
+    "https://incredible-kataifi-f45241.netlify.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
 }));
 
 app.use(express.json());
