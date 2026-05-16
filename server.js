@@ -40,13 +40,13 @@ const app = express();
 ===================== */
 
 app.use(cors({
-  origin: [
-    "http://127.0.0.1:5500",
-    "https://incredible-kataifi-f45241.netlify.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// Handle preflight requests
+app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
