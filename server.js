@@ -42,7 +42,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",                        // local dev
-    "https://learnquest-abc123.netlify.app"          // your netlify URL
+    "https://incredible-kataifi-f45241.netlify.app"          // your netlify URL
   ]
 }));
 
