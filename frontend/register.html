@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnQuest — Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0b1120;
+      --surface: #131d2e;
+      --card:    #1a2741;
+      --border:  #243352;
+      --accent:  #4f8ef7;
+      --accent2: #7c3aed;
+      --green:   #10b981;
+      --red:     #ef4444;
+      --text:    #e2e8f0;
+      --muted:   #64748b;
+      --subtle:  #94a3b8;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 24px 48px rgba(0,0,0,.4);
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .logo span { color: var(--text); }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .field {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--subtle);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      transition: border-color .2s;
+      outline: none;
+    }
+
+    input:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input { padding-right: 42px; }
+
+    .toggle-pw {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0;
+      width: auto;
+      margin: 0;
+    }
+
+    .pw-rules {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 8px;
+    }
+
+    .pw-rule {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .pw-rule:last-child { margin-bottom: 0; }
+
+    .pw-rule .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      transition: background .2s;
+    }
+
+    .pw-rule.ok .dot  { background: var(--green); }
+    .pw-rule.ok       { color: var(--green); }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--subtle);
+      margin-bottom: 20px;
+    }
+
+    .role-badge span { color: var(--accent); font-weight: 600; }
+
+    .btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: opacity .2s;
+      margin-top: 6px;
+    }
+
+    .btn:hover { opacity: 0.88; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .divider {
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 18px 0;
+      position: relative;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .divider::before { left: 0; }
+    .divider::after  { right: 0; }
+
+    .login-link {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .login-link a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .error-msg {
+      background: #1f0a0a;
+      border: 1px solid #7f1d1d;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #fca5a5;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .success-msg {
+      background: #0a1f14;
+      border: 1px solid #166534;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #6ee7b7;
+      margin-bottom: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+
+    <div class="logo">Learn<span>Quest</span></div>
+    <div class="subtitle">Create your student account</div>
+
+    <!-- Always student — no role picker -->
+    <div class="role-badge">
+      🎓 Registering as <span>Student</span>
+    </div>
+
+    <div class="error-msg"   id="errorMsg"></div>
+    <div class="success-msg" id="successMsg"></div>
+
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="username" placeholder="e.g. juandelacruz" autocomplete="username">
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+    </div>
+
+    <div class="field">
+      <label>Password</label>
+      <div class="password-wrap">
+        <input type="password" id="password" placeholder="Create a strong password"
+               autocomplete="new-password" oninput="checkPassword(this.value)">
+        <button class="toggle-pw" type="button" onclick="togglePassword()">👁</button>
+      </div>
+      <div class="pw-rules">
+        <div class="pw-rule" id="rule-len"><div class="dot"></div>At least 8 characters</div>
+        <div class="pw-rule" id="rule-upper"><div class="dot"></div>One uppercase letter (A-Z)</div>
+        <div class="pw-rule" id="rule-lower"><div class="dot"></div>One lowercase letter (a-z)</div>
+        <div class="pw-rule" id="rule-special"><div class="dot"></div>One special character (!@#$...)</div>
+      </div>
+    </div>
+
+    <button class="btn" id="registerBtn" onclick="registerStudent()">
+      Create Account
+    </button>
+
+    <div class="divider">or</div>
+
+    <div class="login-link">
+      Already have an account? <a href="index.html">Log in</a>
+    </div>
+
+  </div>
+
+  <script src="./script.js"></script>
+  <script>
+    function showError(msg) {
+      const el = document.getElementById("errorMsg");
+      el.textContent = msg;
+      el.style.display = "block";
+      document.getElementById("successMsg").style.display = "none";
+    }
+
+    function showSuccess(msg) {
+      const el = document.getElementById("successMsg");
+      el.textContent = msg;
+      el.style.display = "block";
+      document.getElementById("errorMsg").style.display = "none";
+    }
+
+    function togglePassword() {
+      const pw = document.getElementById("password");
+      pw.type = pw.type === "password" ? "text" : "password";
+    }
+
+    function checkPassword(val) {
+      const rules = {
+        "rule-len":     val.length >= 8,
+        "rule-upper":   /[A-Z]/.test(val),
+        "rule-lower":   /[a-z]/.test(val),
+        "rule-special": /[\W_]/.test(val)
+      };
+      for (const [id, ok] of Object.entries(rules)) {
+        document.getElementById(id).classList.toggle("ok", ok);
+      }
+    }
+
+    async function registerStudent() {
+      const username = document.getElementById("username").value.trim();
+      const email    = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      // client-side validation
+      if (!username || !email || !password) {
+        return showError("All fields are required.");
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return showError("Please enter a valid email address.");
+      }
+      if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/.test(password)) {
+        return showError("Password does not meet all requirements.");
+      }
+
+      const btn = document.getElementById("registerBtn");
+      btn.disabled    = true;
+      btn.textContent = "Creating account...";
+
+      try {
+        const res  = await fetch("http://localhost:5000/register", {
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify({
+            username,
+            email,
+            password,
+            role: "student"   // ✅ always student — never from user input
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          showSuccess("Account created! Redirecting to login...");
+          setTimeout(() => window.location.href = "index.html", 1500);
+        } else {
+          showError(data.message || "Registration failed.");
+          btn.disabled    = false;
+          btn.textContent = "Create Account";
+        }
+
+      } catch (err) {
+        showError("Cannot connect to server. Is it running?");
+        btn.disabled    = false;
+        btn.textContent = "Create Account";
+      }
+    }
+  </script>
+
+</body>
+</html>

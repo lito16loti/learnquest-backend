@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnQuest — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0b1120;
+      --surface: #131d2e;
+      --card:    #1a2741;
+      --border:  #243352;
+      --accent:  #4f8ef7;
+      --accent2: #7c3aed;
+      --green:   #10b981;
+      --amber:   #f59e0b;
+      --red:     #ef4444;
+      --text:    #e2e8f0;
+      --muted:   #64748b;
+      --subtle:  #94a3b8;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .logo span { color: var(--text); }
+
+    .admin-badge {
+      font-size: 11px;
+      font-weight: 600;
+      background: #2d1b69;
+      color: #a78bfa;
+      border: 1px solid #4c1d95;
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--subtle);
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .btn-logout {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--subtle);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      padding: 24px 28px 0;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .stat-val {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      padding: 20px 28px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+
+    .tab {
+      padding: 10px 18px;
+      border-radius: 10px 10px 0 0;
+      border: 1px solid transparent;
+      border-bottom: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+      bottom: -1px;
+    }
+
+    .tab:hover { color: var(--text); }
+
+    .tab.active {
+      background: var(--surface);
+      border-color: var(--border);
+      border-bottom-color: var(--surface);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── TAB PANELS ── */
+    .panel { display: none; padding: 24px 28px 40px; }
+    .panel.active { display: block; }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+
+    /* ── FORM GRID ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .form-grid.full { grid-template-columns: 1fr; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+
+    input, select, textarea {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+      width: 100%;
+    }
+
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    input::placeholder, textarea::placeholder { color: var(--muted); }
+
+    textarea { resize: vertical; min-height: 120px; }
+
+    select option { background: var(--card); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-danger:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    /* ── ITEM CARDS ── */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .item-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .item-card-body { flex: 1; min-width: 0; }
+
+    .item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+
+    .item-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .item-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+    /* ── STUDENT TABLE ── */
+    .student-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .student-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .student-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--subtle);
+    }
+
+    .student-table tr:last-child td { border-bottom: none; }
+    .student-table tr:hover td { background: var(--card); }
+
+    .student-name { color: var(--text); font-weight: 500; }
+
+    .xp-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--amber);
+      background: #1c1407;
+      border: 1px solid #78350f;
+      border-radius: 20px;
+      padding: 2px 10px;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all .3s;
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .empty .icon { font-size: 32px; margin-bottom: 10px; }
+
+    /* ── CORRECT ANSWER HIGHLIGHT ── */
+    .answer-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="logo">Learn<span>Quest</span></div>
+      <span class="admin-badge">👨‍🏫 Admin</span>
+    </div>
+    <div class="topbar-right">
+      <div class="avatar" id="adminAvatar">AD</div>
+      <span id="adminName">Admin</span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div>
+        <div class="stat-val" id="statStudents">—</div>
+        <div class="stat-label">Total students</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">❓</div>
+      <div>
+        <div class="stat-val" id="statQuestions">—</div>
+        <div class="stat-label">Quiz questions</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📖</div>
+      <div>
+        <div class="stat-val" id="statLessons">—</div>
+        <div class="stat-label">Lessons</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏆</div>
+      <div>
+        <div class="stat-val" id="statTopXp">—</div>
+        <div class="stat-label">Top student XP</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('questions')">❓ Questions</button>
+    <button class="tab"        onclick="switchTab('lessons')">📖 Lessons</button>
+    <button class="tab"        onclick="switchTab('students')">👥 Students</button>
+  </div>
+
+  <!-- ══════════════════════════
+       PANEL: QUESTIONS
+  ══════════════════════════ -->
+  <div class="panel active" id="panel-questions">
+
+    <div class="panel-title">Add a New Question</div>
+
+    <div class="form-grid full">
+      <div class="field">
+        <label>Question</label>
+        <input type="text" id="question" placeholder="Type the question here...">
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Option 1</label>
+        <input type="text" id="opt1" placeholder="Option A">
+      </div>
+      <div class="field">
+        <label>Option 2</label>
+        <input type="text" id="opt2" placeholder="Option B">
+      </div>
+      <div class="field">
+        <label>Option 3</label>
+        <input type="text" id="opt3" placeholder="Option C">
+      </div>
+      <div class="field">
+        <label>Option 4</label>
+        <input type="text" id="opt4" placeholder="Option D">
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Correct Answer</label>
+        <select id="answer">
+          <option value="0">Option 1 (A)</option>
+          <option value="1">Option 2 (B)</option>
+          <option value="2">Option 3 (C)</option>
+          <option value="3">Option 4 (D)</option>
+        </select>
+        <span class="answer-hint">Select which option is correct</span>
+      </div>
+      <div class="field">
+        <label>Subject</label>
+        <select id="subject">
+          <option value="General Mathematics">General Mathematics</option>
+          <option value="Earth and Life Science">Earth and Life Science</option>
+          <option value="UCSP">UCSP</option>
+          <option value="Personal Development">Personal Development</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Difficulty (1–3)</label>
+        <select id="difficulty">
+          <option value="1">1 — Easy</option>
+          <option value="2">2 — Medium</option>
+          <option value="3">3 — Hard</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="addQBtn" onclick="addQuestion()">➕ Add Question</button>
+
+    <hr class="section-divider">
+
+    <div class="panel-title">All Questions <span id="qCount" style="font-size:13px;color:var(--muted);font-weight:400"></span></div>
+    <div class="item-list" id="questionList">
+      <div class="empty"><div class="icon">⏳</div>Loading...</div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════
+       PANEL: LESSONS
+  ══════════════════════════ -->
+  <div class="panel" id="panel-lessons">
+
+    <div class="panel-title">Add a New Lesson</div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Subject</label>
+        <select id="lessonSubject">
+          <option value="General Mathematics">General Mathematics</option>
+          <option value="Earth and Life Science">Earth and Life Science</option>
+          <option value="UCSP">UCSP</option>
+          <option value="Personal Development">Personal Development</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Order Number</label>
+        <input type="number" id="lessonOrder" placeholder="e.g. 1" min="1" value="1">
+      </div>
+      <div class="field">
+        <label>XP Reward</label>
+        <input type="number" id="lessonXp" placeholder="e.g. 20" value="20" min="1">
+      </div>
+    </div>
+
+    <div class="form-grid full">
+      <div class="field">
+        <label>Lesson Title</label>
+        <input type="text" id="lessonTitle" placeholder="e.g. Functions and Relations">
+      </div>
+    </div>
+
+    <div class="form-grid full">
+      <div class="field">
+        <label>Content (HTML allowed)</label>
+        <textarea id="lessonContent" placeholder="Type lesson content here. You can use HTML tags like &lt;strong&gt;, &lt;p&gt;, &lt;ul&gt;, etc."></textarea>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="addLessonBtn" onclick="addLesson()">➕ Add Lesson</button>
+
+    <hr class="section-divider">
+
+    <div class="panel-title">All Lessons <span id="lessonCount" style="font-size:13px;color:var(--muted);font-weight:400"></span></div>
+    <div class="item-list" id="lessonList">
+      <div class="empty"><div class="icon">⏳</div>Loading...</div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════
+       PANEL: STUDENTS
+  ══════════════════════════ -->
+  <div class="panel" id="panel-students">
+
+    <div class="panel-title">Student List & Scores</div>
+
+    <div id="studentTable">
+      <div class="empty"><div class="icon">⏳</div>Loading...</div>
+    </div>
+
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="./script.js"></script>
+  <script>
+
+    /* ── AUTH GUARD ── */
+    const role     = localStorage.getItem("role");
+    const username = localStorage.getItem("username");
+    const token    = localStorage.getItem("token");
+
+    if (!role || role !== "admin" || !token) {
+      alert("Admin only. Please log in.");
+      window.location.href = "index.html";
+    }
+
+    /* ── INIT ── */
+    document.getElementById("adminName").textContent   = username || "Admin";
+    document.getElementById("adminAvatar").textContent =
+      (username || "AD").slice(0, 2).toUpperCase();
+
+    loadAdminStats();
+    loadAdminQuestions();
+    loadAdminLessons();
+    loadStudents();
+
+    /* ── TOAST ── */
+    function showToast(msg, color) {
+      const t = document.getElementById("toast");
+      t.textContent      = msg;
+      t.style.background = color || "var(--green)";
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 3000);
+    }
+
+    /* ── TABS ── */
+    function switchTab(name) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
+      document.getElementById("panel-" + name).classList.add("active");
+      // highlight correct tab button
+      const tabs = document.querySelectorAll(".tab");
+      const names = ["questions", "lessons", "students"];
+      tabs[names.indexOf(name)].classList.add("active");
+    }
+
+    /* ── LOAD STATS ── */
+    async function loadAdminStats() {
+      try {
+        // students + top XP from leaderboard
+        const lbRes   = await fetch("http://localhost:5000/leaderboard");
+        const students = await lbRes.json();
+        document.getElementById("statStudents").textContent = students.length;
+        document.getElementById("statTopXp").textContent    =
+          students.length ? (students[0].score || 0) + " XP" : "0 XP";
+
+        // questions count
+        const qRes  = await fetch("http://localhost:5000/questions");
+        const qs    = await qRes.json();
+        document.getElementById("statQuestions").textContent = qs.length;
+
+        // lessons count
+        const lRes  = await fetch("http://localhost:5000/lessons", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const ls    = await lRes.json();
+        document.getElementById("statLessons").textContent = Array.isArray(ls) ? ls.length : 0;
+
+      } catch (e) {
+        console.error("Stats error:", e);
+      }
+    }
+
+    /* ── LOAD QUESTIONS ── */
+    async function loadAdminQuestions() {
+      const listEl = document.getElementById("questionList");
+
+      try {
+        const res  = await fetch("http://localhost:5000/questions");
+        const data = await res.json();
+
+        document.getElementById("qCount").textContent =
+          "(" + data.length + " total)";
+
+        if (!data.length) {
+          listEl.innerHTML = '<div class="empty"><div class="icon">📭</div>No questions yet.</div>';
+          return;
+        }
+
+        listEl.innerHTML = data.map(q => `
+          <div class="item-card">
+            <div class="item-card-body">
+              <div class="item-title">${q.question}</div>
+              <div class="item-meta">
+                📚 ${q.subject} &nbsp;·&nbsp;
+                ⭐ Difficulty ${q.difficulty} &nbsp;·&nbsp;
+                ✅ Answer: Option ${Number(q.answer) + 1}
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="btn-danger" onclick="deleteQuestion('${q._id}')">🗑 Delete</button>
+            </div>
+          </div>
+        `).join("");
+
+      } catch (e) {
+        listEl.innerHTML = '<div class="empty"><div class="icon">⚠️</div>Failed to load questions.</div>';
+      }
+    }
+
+    /* ── ADD QUESTION ── */
+    async function addQuestion() {
+      const question   = document.getElementById("question").value.trim();
+      const options    = [
+        document.getElementById("opt1").value.trim(),
+        document.getElementById("opt2").value.trim(),
+        document.getElementById("opt3").value.trim(),
+        document.getElementById("opt4").value.trim()
+      ];
+      const answer     = Number(document.getElementById("answer").value);
+      const subject    = document.getElementById("subject").value;
+      const difficulty = Number(document.getElementById("difficulty").value);
+
+      if (!question || options.some(o => !o)) {
+        return showToast("Fill in all fields.", "var(--red)");
+      }
+
+      const btn = document.getElementById("addQBtn");
+      btn.disabled    = true;
+      btn.textContent = "Adding...";
+
+      try {
+        const res  = await fetch("http://localhost:5000/admin/questions", {
+          method:  "POST",
+          headers: {
+            "Content-Type":  "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ question, options, answer, subject, difficulty })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          showToast("✅ Question added!");
+          // clear fields
+          ["question","opt1","opt2","opt3","opt4"].forEach(id =>
+            document.getElementById(id).value = ""
+          );
+          loadAdminQuestions();
+          loadAdminStats();
+        } else {
+          showToast(data.message || "Add failed.", "var(--red)");
+        }
+
+      } catch (e) {
+        showToast("Server error.", "var(--red)");
+      }
+
+      btn.disabled    = false;
+      btn.textContent = "➕ Add Question";
+    }
+
+    /* ── DELETE QUESTION ── */
+    async function deleteQuestion(id) {
+      if (!confirm("Delete this question?")) return;
+
+      try {
+        await fetch("http://localhost:5000/admin/questions/" + id, {
+          method:  "DELETE",
+          headers: { "Authorization": "Bearer " + token }
+        });
+        showToast("🗑 Question deleted.");
+        loadAdminQuestions();
+        loadAdminStats();
+      } catch (e) {
+        showToast("Delete failed.", "var(--red)");
+      }
+    }
+
+    /* ── LOAD LESSONS ── */
+    async function loadAdminLessons() {
+      const listEl = document.getElementById("lessonList");
+
+      try {
+        const res  = await fetch("http://localhost:5000/lessons", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+
+        document.getElementById("lessonCount").textContent =
+          "(" + (Array.isArray(data) ? data.length : 0) + " total)";
+
+        if (!Array.isArray(data) || !data.length) {
+          listEl.innerHTML = '<div class="empty"><div class="icon">📭</div>No lessons yet.</div>';
+          return;
+        }
+
+        listEl.innerHTML = data.map(l => `
+          <div class="item-card">
+            <div class="item-card-body">
+              <div class="item-title">${l.title}</div>
+              <div class="item-meta">
+                📚 ${l.subject} &nbsp;·&nbsp;
+                ⚡ ${l.xp_reward || 20} XP &nbsp;·&nbsp;
+                #${l.order_num}
+              </div>
+            </div>
+            <div class="item-actions">
+              <button class="btn-danger" onclick="deleteLesson('${l._id}')">🗑 Delete</button>
+            </div>
+          </div>
+        `).join("");
+
+      } catch (e) {
+        listEl.innerHTML = '<div class="empty"><div class="icon">⚠️</div>Failed to load lessons.</div>';
+      }
+    }
+
+    /* ── ADD LESSON ── */
+    async function addLesson() {
+      const subject   = document.getElementById("lessonSubject").value;
+      const title     = document.getElementById("lessonTitle").value.trim();
+      const order_num = Number(document.getElementById("lessonOrder").value);
+      const xp_reward = Number(document.getElementById("lessonXp").value);
+      const content   = document.getElementById("lessonContent").value.trim();
+
+      if (!title || !content) {
+        return showToast("Title and content are required.", "var(--red)");
+      }
+
+      const btn = document.getElementById("addLessonBtn");
+      btn.disabled    = true;
+      btn.textContent = "Adding...";
+
+      try {
+        const res  = await fetch("http://localhost:5000/admin/lessons", {
+          method:  "POST",
+          headers: {
+            "Content-Type":  "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify({ subject, title, order_num, xp_reward, content })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          showToast("✅ Lesson added!");
+          document.getElementById("lessonTitle").value   = "";
+          document.getElementById("lessonContent").value = "";
+          loadAdminLessons();
+          loadAdminStats();
+        } else {
+          showToast(data.message || "Add failed.", "var(--red)");
+        }
+
+      } catch (e) {
+        showToast("Server error.", "var(--red)");
+      }
+
+      btn.disabled    = false;
+      btn.textContent = "➕ Add Lesson";
+    }
+
+    /* ── DELETE LESSON ── */
+    async function deleteLesson(id) {
+      if (!confirm("Delete this lesson? Student progress on it will also be removed.")) return;
+
+      try {
+        await fetch("http://localhost:5000/admin/lessons/" + id, {
+          method:  "DELETE",
+          headers: { "Authorization": "Bearer " + token }
+        });
+        showToast("🗑 Lesson deleted.");
+        loadAdminLessons();
+        loadAdminStats();
+      } catch (e) {
+        showToast("Delete failed.", "var(--red)");
+      }
+    }
+
+    /* ── LOAD STUDENTS ── */
+    async function loadStudents() {
+      const el = document.getElementById("studentTable");
+
+      try {
+        const res   = await fetch("http://localhost:5000/leaderboard");
+        const users = await res.json();
+
+        if (!users.length) {
+          el.innerHTML = '<div class="empty"><div class="icon">👥</div>No students yet.</div>';
+          return;
+        }
+
+        el.innerHTML = `
+          <table class="student-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>XP</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${users.map((u, i) => `
+                <tr>
+                  <td>${i + 1}</td>
+                  <td class="student-name">${u.username}</td>
+                  <td>${u.email || "—"}</td>
+                  <td><span class="xp-pill">⚡ ${u.score || 0}</span></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+
+      } catch (e) {
+        el.innerHTML = '<div class="empty"><div class="icon">⚠️</div>Failed to load students.</div>';
+      }
+    }
+
+  </script>
+
+</body>
+</html>
