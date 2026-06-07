@@ -981,10 +981,10 @@
     <div class="auth-card">
       <div class="auth-logo">GAMIFY</span></div>
       <div class="auth-title">Welcome back</div>
-      <input class="auth-field" type="text" placeholder="Username" id="signinUser"/>
-      <input class="auth-field" type="password" placeholder="Password" id="signinPass"/>
+      <input class="auth-field" type="text" placeholder="Email" id="loginEmail"/>
+      <input class="auth-field" type="password" placeholder="Password" id="loginPassword"/>
       <div id="signinError" style="display:none;background:#1f0a0a;border:1px solid #7f1d1d;border-radius:8px;padding:10px 14px;font-size:13px;color:#fca5a5;margin-bottom:10px;"></div>
-      <button class="auth-submit" id="signinBtn" onclick="doLogin()">Log In</button>
+      <button onclick="login()">Log In</button>
       <div class="auth-divider">or continue with</div>
       <button class="auth-social">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -1034,71 +1034,7 @@
   // Show landing by default
   document.getElementById('landing-page').style.display = 'block';
 
-  // ── REAL LOGIN ──
-  async function doLogin() {
-    const username = document.getElementById('signinUser').value.trim();
-    const password = document.getElementById('signinPass').value;
-    const errEl    = document.getElementById('signinError');
-    const btn      = document.getElementById('signinBtn');
-
-    errEl.style.display = 'none';
-
-    if (!username || !password) {
-      errEl.textContent = 'Please enter your username and password.';
-      errEl.style.display = 'block';
-      return;
-    }
-
-    btn.disabled    = true;
-    btn.textContent = 'Logging in...';
-
-    try {
-      const res  = await fetch('https://learnquest-backend-coku.onrender.com/login', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        errEl.textContent   = data.message || 'Invalid username or password.';
-        errEl.style.display = 'block';
-        btn.disabled        = false;
-        btn.textContent     = 'Log In';
-        return;
-      }
-
-      // Save session to localStorage
-      localStorage.setItem('token',    data.token);
-      localStorage.setItem('username', data.username || username);
-      localStorage.setItem('role',     data.role);
-      if (!localStorage.getItem('joinedDate')) {
-        localStorage.setItem('joinedDate', new Date().toLocaleDateString('en-US', { year:'numeric', month:'long' }));
-      }
-
-      // Redirect based on role
-      if (data.role === 'admin') {
-        window.location.href = 'admin.html';
-      } else {
-        window.location.href = 'dashboard.html';
-      }
-
-    } catch (err) {
-      errEl.textContent   = 'Cannot connect to server. Please try again.';
-      errEl.style.display = 'block';
-      btn.disabled        = false;
-      btn.textContent     = 'Log In';
-    }
-  }
-
-  // Allow pressing Enter to submit login
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const signin = document.getElementById('signin');
-      if (signin && signin.classList.contains('active')) doLogin();
-    }
-  });
+  src="./script.js"
 </script>
 </body>
 </html>
