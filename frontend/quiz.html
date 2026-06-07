@@ -1,59 +1,891 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <title>Quiz</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnQuest — Quiz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0b1120;
+      --surface: #131d2e;
+      --card:    #1a2741;
+      --border:  #243352;
+      --accent:  #4f8ef7;
+      --accent2: #7c3aed;
+      --green:   #10b981;
+      --amber:   #f59e0b;
+      --red:     #ef4444;
+      --text:    #e2e8f0;
+      --muted:   #64748b;
+      --subtle:  #94a3b8;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo { font-size: 18px; font-weight: 700; color: var(--accent); }
+    .logo span { color: var(--text); }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      transition: color .3s, border-color .3s;
+    }
+
+    .timer-box.warning { color: var(--amber); border-color: var(--amber); }
+    .timer-box.danger  { color: var(--red);   border-color: var(--red);   }
+
+    .btn-back {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--subtle);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-back:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ── PAGES ── */
+    .page { display: none; flex: 1; align-items: center; justify-content: center; padding: 32px 20px; }
+    .page.active { display: flex; flex-direction: column; }
+
+    /* ── LOBBY ── */
+    .lobby-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 36px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .lobby-icon { font-size: 48px; margin-bottom: 16px; }
+
+    .lobby-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .lobby-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .count-selector {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .count-btn {
+      padding: 10px 28px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--subtle);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .count-btn:hover { border-color: var(--accent); color: var(--text); }
+
+    .count-btn.selected {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .subject-select {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 14px;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 20px;
+      transition: border-color .2s;
+    }
+
+    .subject-select:focus { border-color: var(--accent); }
+    .subject-select option { background: var(--card); }
+
+    .btn-start {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn-start:hover { opacity: 0.88; }
+    .btn-start:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      padding: 16px 28px 0;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .progress-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 3px;
+      transition: width .4s ease;
+    }
+
+    /* ── QUESTION DOTS ── */
+    .dots-wrap {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 12px 28px 0;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all .3s;
+    }
+
+    .dot.current  { background: var(--accent); transform: scale(1.3); }
+    .dot.answered { background: var(--green); }
+    .dot.wrong    { background: var(--red); }
+
+    /* ── QUESTION CARD ── */
+    .question-wrap {
+      padding: 20px 28px 40px;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .q-number {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .q-text {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: left;
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--text);
+      font-size: 14px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: #0e1d3a;
+    }
+
+    .option-btn.selected {
+      border-color: var(--accent);
+      background: #0e1d3a;
+    }
+
+    .option-btn.correct {
+      border-color: var(--green);
+      background: #0a1f14;
+      color: var(--green);
+    }
+
+    .option-btn.wrong {
+      border-color: var(--red);
+      background: #1f0a0a;
+      color: var(--red);
+    }
+
+    .option-btn:disabled { cursor: default; }
+
+    .option-letter {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: all .2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .option-btn.selected .option-letter { background: var(--accent); color: #fff; }
+    .option-btn.correct  .option-letter { background: var(--green);  color: #fff; }
+    .option-btn.wrong    .option-letter { background: var(--red);    color: #fff; }
+
+    .option-text { flex: 1; line-height: 1.4; }
+
+    .feedback-msg {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      min-height: 20px;
+      transition: all .2s;
+    }
+
+    .feedback-msg.correct { color: var(--green); }
+    .feedback-msg.wrong   { color: var(--red); }
+
+    .btn-next {
+      width: 100%;
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: opacity .2s;
+      display: none;
+    }
+
+    .btn-next:hover { opacity: 0.88; }
+    .btn-next.visible { display: block; }
+
+    /* ── RESULTS ── */
+    .results-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px 36px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .result-icon { font-size: 52px; margin-bottom: 16px; }
+
+    .result-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .result-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .result-stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 10px;
+    }
+
+    .result-stat-val {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text);
+    }
+
+    .result-stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .xp-earned {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--amber);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 6px;
+    }
+
+    .xp-breakdown {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.8;
+    }
+
+    .results-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-primary {
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: opacity .2s;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-secondary {
+      padding: 13px;
+      background: transparent;
+      color: var(--subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: all .3s;
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── LOADING ── */
+    .loading-msg {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      padding: 40px;
+    }
+  </style>
 </head>
+<body>
 
-<body onload="loadQuestions()">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="logo">Learn<span>Quest</span></div>
+    <div class="topbar-right">
+      <div class="timer-box" id="timerBox">⏱ <span id="timerDisplay">--:--</span></div>
+      <button class="btn-back" onclick="goBack()">← Back</button>
+    </div>
+  </header>
 
-  <div class="container">
-<!DOCTYPE html>
-<html>
+  <!-- ═══════════════════
+       PAGE: LOBBY
+  ═══════════════════ -->
+  <div class="page active" id="pageLobby">
+    <div class="lobby-card">
+      <div class="lobby-icon">🎮</div>
+      <div class="lobby-title">Ready to quiz?</div>
+      <div class="lobby-sub">
+        Questions are randomized every time.<br>
+        Pick how many you want to answer.
+      </div>
 
-<head>
+      <div class="count-selector">
+        <button class="count-btn selected" onclick="selectCount(5, this)">5 questions</button>
+        <button class="count-btn"          onclick="selectCount(10, this)">10 questions</button>
+      </div>
 
-  <title>Quiz</title>
+      <select class="subject-select" id="subjectFilter">
+        <option value="all">All subjects</option>
+        <option value="General Mathematics">General Mathematics</option>
+        <option value="Earth and Life Science">Earth and Life Science</option>
+        <option value="UCSP">UCSP</option>
+        <option value="Personal Development">Personal Development</option>
+      </select>
 
-  <link rel="stylesheet"
-        href="style.css">
+      <button class="btn-start" id="startBtn" onclick="startQuiz()">
+        Start quiz ▶
+      </button>
+    </div>
+  </div>
 
-</head>
+  <!-- ═══════════════════
+       PAGE: QUIZ
+  ═══════════════════ -->
+  <div class="page" id="pageQuiz">
 
-<body
-  onload="
-  checkAuth();
-  loadQuestions();
-">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span id="progressLabel">Question 1 of 5</span>
+        <span id="scoreLabel">Score: 0</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
 
-  <div class="container">
+    <div class="dots-wrap" id="dotsWrap"></div>
 
-    <h2 id="question">
-      Loading...
-    </h2>
-
-    <div id="options"></div>
-
-    <p id="progress"></p>
+    <div class="question-wrap">
+      <div class="q-number" id="qNumber">Question 1</div>
+      <div class="q-text"   id="qText">Loading...</div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="feedback-msg" id="feedbackMsg"></div>
+      <button class="btn-next" id="nextBtn" onclick="nextQuestion()">
+        Next question →
+      </button>
+    </div>
 
   </div>
 
-  <script src="./script.js"></script>
+  <!-- ═══════════════════
+       PAGE: RESULTS
+  ═══════════════════ -->
+  <div class="page" id="pageResults">
+    <div class="results-card">
+      <div class="result-icon" id="resultIcon">🎉</div>
+      <div class="result-title" id="resultTitle">Quiz complete!</div>
+      <div class="result-sub"   id="resultSub">Here's how you did</div>
 
-</body>
-</html>
-    <h2 id="question">
-      Loading...
-    </h2>
+      <div class="result-stats">
+        <div class="result-stat">
+          <div class="result-stat-val" id="statCorrect">0</div>
+          <div class="result-stat-label">Correct</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val" id="statPct">0%</div>
+          <div class="result-stat-label">Accuracy</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val" id="statTime">0s</div>
+          <div class="result-stat-label">Time</div>
+        </div>
+      </div>
 
-    <div id="options"></div>
+      <div class="xp-earned" id="xpEarned">+0 XP</div>
+      <div class="xp-breakdown" id="xpBreakdown"></div>
 
-    <p id="progress"></p>
-
+      <div class="results-btns">
+        <button class="btn-secondary" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+        <button class="btn-secondary" onclick="window.location.href='leaderboard.html'">🏆 Leaderboard</button>
+      </div>
+    </div>
   </div>
 
+  <div class="toast" id="toast"></div>
+
   <script src="./script.js"></script>
+  <script>
+
+    /* ── AUTH GUARD ── */
+    const role  = localStorage.getItem("role");
+    const token = localStorage.getItem("token");
+    if (!role || !token) {
+      window.location.href = "index.html";
+    }
+
+    /* ── STATE ── */
+    let allQuestions   = [];   // fetched from server
+    let quizQuestions  = [];   // randomized subset
+    let currentIndex   = 0;
+    let score          = 0;
+    let selectedCount  = 5;
+    let answered       = [];   // true = correct, false = wrong, null = unanswered
+    let startTime      = null;
+    let timerInterval  = null;
+    let timeTaken      = 0;
+    let quizActive     = false;
+
+    /* ── HELPERS ── */
+    function showPage(id) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    function showToast(msg, color) {
+      const t = document.getElementById("toast");
+      t.textContent      = msg;
+      t.style.background = color || "var(--green)";
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 3000);
+    }
+
+    function goBack() {
+      stopTimer();
+      window.location.href = "dashboard.html";
+    }
+
+    /* ── COUNT SELECTOR ── */
+    function selectCount(n, btn) {
+      selectedCount = n;
+      document.querySelectorAll(".count-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+    }
+
+    /* ── SHUFFLE (Fisher-Yates) ── */
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    /* ── TIMER ── */
+    function startTimer() {
+      startTime = Date.now();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timeTaken = startTime ? Math.round((Date.now() - startTime) / 1000) : 0;
+    }
+
+    function updateTimer() {
+      const elapsed = Math.round((Date.now() - startTime) / 1000);
+      const mins    = Math.floor(elapsed / 60).toString().padStart(2, "0");
+      const secs    = (elapsed % 60).toString().padStart(2, "0");
+      document.getElementById("timerDisplay").textContent = mins + ":" + secs;
+
+      const box = document.getElementById("timerBox");
+      box.className = "timer-box" + (elapsed > 90 ? " danger" : elapsed > 60 ? " warning" : "");
+    }
+
+    /* ── LOAD ALL QUESTIONS ── */
+    async function loadAllQuestions() {
+      const btn = document.getElementById("startBtn");
+      btn.disabled    = true;
+      btn.textContent = "Loading questions...";
+
+      try {
+        const res = await fetch(
+          (typeof API !== "undefined" ? API : "https://learnquest-backend-coku.onrender.com") + "/questions"
+        );
+        allQuestions    = await res.json();
+        btn.disabled    = false;
+        btn.textContent = "Start quiz ▶";
+
+        if (!allQuestions.length) {
+          btn.disabled    = true;
+          btn.textContent = "No questions available";
+        }
+
+      } catch (err) {
+        console.error(err);
+        btn.disabled    = true;
+        btn.textContent = "Failed to load — is server running?";
+      }
+    }
+
+    /* ── START QUIZ ── */
+    function startQuiz() {
+      const subject = document.getElementById("subjectFilter").value;
+
+      // filter by subject if selected
+      let pool = subject === "all"
+        ? allQuestions
+        : allQuestions.filter(q => q.subject === subject);
+
+      if (!pool.length) {
+        showToast("No questions found for that subject.", "var(--red)");
+        return;
+      }
+
+      // shuffle and pick N
+      quizQuestions = shuffle(pool).slice(0, Math.min(selectedCount, pool.length));
+      currentIndex  = 0;
+      score         = 0;
+      answered      = new Array(quizQuestions.length).fill(null);
+      quizActive    = true;
+
+      buildDots();
+      showQuestion(0);
+      showPage("pageQuiz");
+      startTimer();
+    }
+
+    /* ── BUILD DOTS ── */
+    function buildDots() {
+      const wrap = document.getElementById("dotsWrap");
+      wrap.innerHTML = quizQuestions.map((_, i) =>
+        `<div class="dot ${i === 0 ? 'current' : ''}" id="dot-${i}"></div>`
+      ).join("");
+    }
+
+    function updateDots(index, result) {
+      // result: "correct" | "wrong"
+      const dot = document.getElementById("dot-" + index);
+      if (dot) {
+        dot.classList.remove("current");
+        dot.classList.add(result === "correct" ? "answered" : "wrong");
+      }
+      const next = document.getElementById("dot-" + (index + 1));
+      if (next) next.classList.add("current");
+    }
+
+    /* ── SHOW QUESTION ── */
+    function showQuestion(index) {
+      const q       = quizQuestions[index];
+      const total   = quizQuestions.length;
+      const pct     = Math.round((index / total) * 100);
+      const letters = ["A", "B", "C", "D"];
+
+      document.getElementById("qNumber").textContent      = `Question ${index + 1} of ${total}`;
+      document.getElementById("qText").textContent        = q.question;
+      document.getElementById("progressLabel").textContent = `Question ${index + 1} of ${total}`;
+      document.getElementById("scoreLabel").textContent    = `Score: ${score}`;
+      document.getElementById("progressFill").style.width  = pct + "%";
+      document.getElementById("feedbackMsg").textContent   = "";
+      document.getElementById("feedbackMsg").className     = "feedback-msg";
+      document.getElementById("nextBtn").className         = "btn-next";
+
+      const grid = document.getElementById("optionsGrid");
+      grid.innerHTML = q.options.map((opt, i) => `
+        <button class="option-btn" onclick="checkAnswer(${i})" id="opt-${i}">
+          <div class="option-letter">${letters[i]}</div>
+          <div class="option-text">${opt}</div>
+        </button>
+      `).join("");
+    }
+
+    /* ── CHECK ANSWER ── */
+    function checkAnswer(selectedIndex) {
+      if (!quizActive) return;
+
+      const q       = quizQuestions[currentIndex];
+      const correct = q.answer;
+      const isRight = selectedIndex === correct;
+      const letters = ["A", "B", "C", "D"];
+
+      // disable all options
+      document.querySelectorAll(".option-btn").forEach(btn => btn.disabled = true);
+
+      // highlight selected
+      const selBtn = document.getElementById("opt-" + selectedIndex);
+      selBtn.classList.add(isRight ? "correct" : "wrong");
+
+      // always show correct answer
+      document.getElementById("opt-" + correct).classList.add("correct");
+
+      // feedback
+      const fb = document.getElementById("feedbackMsg");
+      if (isRight) {
+        score++;
+        answered[currentIndex] = "correct";
+        fb.textContent  = "✅ Correct!";
+        fb.className    = "feedback-msg correct";
+      } else {
+        answered[currentIndex] = "wrong";
+        fb.textContent  = `❌ Wrong! Correct answer: ${letters[correct]}`;
+        fb.className    = "feedback-msg wrong";
+      }
+
+      updateDots(currentIndex, answered[currentIndex]);
+      document.getElementById("scoreLabel").textContent = `Score: ${score}`;
+
+      // show next button
+      const nextBtn = document.getElementById("nextBtn");
+      nextBtn.className = "btn-next visible";
+      nextBtn.textContent = currentIndex + 1 < quizQuestions.length
+        ? "Next question →"
+        : "See results →";
+    }
+
+    /* ── NEXT QUESTION ── */
+    function nextQuestion() {
+      currentIndex++;
+      if (currentIndex < quizQuestions.length) {
+        showQuestion(currentIndex);
+        // update progress
+        const pct = Math.round((currentIndex / quizQuestions.length) * 100);
+        document.getElementById("progressFill").style.width = pct + "%";
+      } else {
+        finishQuiz();
+      }
+    }
+
+    /* ── FINISH QUIZ ── */
+    async function finishQuiz() {
+      quizActive = false;
+      stopTimer();
+
+      const total     = quizQuestions.length;
+      const pct       = Math.round((score / total) * 100);
+      const baseXP    = score * 10;
+      const perfectXP = score === total ? 20 : 0;
+      const speedXP   = timeTaken < 60 ? 10 : 0;
+      const totalXP   = baseXP + perfectXP + speedXP;
+
+      // update progress bar to 100%
+      document.getElementById("progressFill").style.width = "100%";
+
+      // results page
+      document.getElementById("resultIcon").textContent = pct >= 80 ? "🏆" : pct >= 50 ? "🎯" : "📚";
+      document.getElementById("resultTitle").textContent = pct >= 80 ? "Excellent work!" : pct >= 50 ? "Good effort!" : "Keep practicing!";
+      document.getElementById("resultSub").textContent   = `You scored ${score} out of ${total}`;
+      document.getElementById("statCorrect").textContent = score + "/" + total;
+      document.getElementById("statPct").textContent     = pct + "%";
+      document.getElementById("statTime").textContent    = timeTaken + "s";
+      document.getElementById("xpEarned").textContent    = "+" + totalXP + " XP";
+
+      const breakdown = [
+        `${score} correct × 10 = ${baseXP} XP`,
+        perfectXP ? `🌟 Perfect score bonus: +${perfectXP} XP` : "",
+        speedXP   ? `⚡ Speed bonus (under 60s): +${speedXP} XP`  : ""
+      ].filter(Boolean).join("\n");
+
+      document.getElementById("xpBreakdown").innerText = breakdown;
+
+      showPage("pageResults");
+
+      // submit score to server
+      try {
+        const res = await fetch(
+          (typeof API !== "undefined" ? API : "https://learnquest-backend-coku.onrender.com") + "/submit-score",
+          {
+            method:  "POST",
+            headers: {
+              "Content-Type":  "application/json",
+              "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({ score: totalXP })
+          }
+        );
+        if (res.ok) {
+          showToast("+" + totalXP + " XP saved!");
+        }
+      } catch (err) {
+        console.error("Score submit failed:", err);
+      }
+    }
+
+    /* ── INIT ── */
+    loadAllQuestions();
+
+  </script>
 
 </body>
 </html>

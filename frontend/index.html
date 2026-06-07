@@ -1,40 +1,1104 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAMIFY — Gamified E-Learning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <title>Login</title>
+    :root {
+      --bg:      #0b1120;
+      --surface: #131d2e;
+      --card:    #1a2741;
+      --border:  #243352;
+      --accent:  #4f8ef7;
+      --accent2: #7c3aed;
+      --green:   #10b981;
+      --amber:   #f59e0b;
+      --red:     #ef4444;
+      --text:    #e2e8f0;
+      --muted:   #64748b;
+      --subtle:  #94a3b8;
+    }
 
-  <link rel="stylesheet"
-        href="style.css">
+    html, body {
+      width: 100%; min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+    }
 
+    /* ── SPLASH ── */
+    #splash {
+      position: fixed; inset: 0; z-index: 1000;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+    }
+
+    .splash-logo {
+      font-size: clamp(52px, 12vw, 100px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: var(--accent);
+      animation: splashReveal 0.8s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+    }
+
+    .splash-logo span { color: var(--text); }
+
+    .splash-sub {
+      font-size: 13px;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-family: 'JetBrains Mono', monospace;
+      animation: fadeIn 0.5s ease 0.9s both;
+    }
+
+    .splash-bar {
+      width: 180px; height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-top: 32px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 0.4s ease 0.8s both;
+    }
+
+    .splash-bar::after {
+      content: '';
+      position: absolute; left: -100%; top: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      animation: barLoad 1.4s cubic-bezier(0.4,0,0.2,1) 0.8s forwards;
+    }
+
+    @keyframes barLoad    { 0% { left:-100% } 100% { left:100% } }
+    @keyframes splashReveal { from { opacity:0; transform:translateY(30px) scale(0.92) } to { opacity:1; transform:none } }
+    @keyframes fadeIn     { from { opacity:0 } to { opacity:1 } }
+    @keyframes splashOut  { 0% { opacity:1 } 100% { opacity:0; pointer-events:none } }
+    .splash-exit { animation: splashOut 0.6s ease forwards; }
+
+    /* ── SITE WRAPPER ── */
+    #site {
+      position: relative; z-index: 1;
+      opacity: 0; transition: opacity 0.5s ease;
+    }
+    #site.visible { opacity: 1; }
+
+    /* ── NAVBAR ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center;
+      padding: 14px 32px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+      margin-right: auto;
+    }
+
+    .nav-logo span { color: var(--text); }
+
+    .nav-btn {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 22px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .nav-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      margin-left: 8px;
+    }
+
+    .nav-btn.primary:hover { opacity: 0.88; color: #fff; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 480px;
+      overflow: hidden;
+      display: flex; align-items: flex-end;
+      background: var(--surface);
+    }
+
+    /* SVG city skyline background, navy-toned */
+    .hero-city {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(to bottom, var(--bg) 0%, transparent 40%, var(--bg) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 480'%3E%3Crect width='1440' height='480' fill='%230b1120'/%3E%3Crect x='0' y='200' width='80' height='280' fill='%23131d2e'/%3E%3Crect x='90' y='160' width='60' height='320' fill='%23111928'/%3E%3Crect x='160' y='220' width='50' height='260' fill='%23162030'/%3E%3Crect x='220' y='140' width='90' height='340' fill='%23121b29'/%3E%3Crect x='320' y='180' width='70' height='300' fill='%23131d2e'/%3E%3Crect x='400' y='100' width='110' height='380' fill='%230f1822'/%3E%3Crect x='520' y='200' width='55' height='280' fill='%23162030'/%3E%3Crect x='585' y='150' width='80' height='330' fill='%23111928'/%3E%3Crect x='675' y='120' width='100' height='360' fill='%23131d2e'/%3E%3Crect x='785' y='190' width='65' height='290' fill='%23162030'/%3E%3Crect x='860' y='160' width='85' height='320' fill='%23121b29'/%3E%3Crect x='955' y='110' width='95' height='370' fill='%230f1822'/%3E%3Crect x='1060' y='200' width='60' height='280' fill='%23162030'/%3E%3Crect x='1130' y='130' width='110' height='350' fill='%23111928'/%3E%3Crect x='1250' y='180' width='75' height='300' fill='%23131d2e'/%3E%3Crect x='1335' y='160' width='105' height='320' fill='%23121b29'/%3E%3Crect x='12' y='215' width='8' height='6' fill='%234f8ef7' opacity='.25'/%3E%3Crect x='28' y='215' width='8' height='6' fill='%234f8ef7' opacity='.15'/%3E%3Crect x='12' y='230' width='8' height='6' fill='%237c3aed' opacity='.2'/%3E%3Crect x='415' y='115' width='10' height='7' fill='%234f8ef7' opacity='.3'/%3E%3Crect x='435' y='115' width='10' height='7' fill='%234f8ef7' opacity='.18'/%3E%3Crect x='415' y='132' width='10' height='7' fill='%237c3aed' opacity='.25'/%3E%3Crect x='688' y='135' width='12' height='8' fill='%234f8ef7' opacity='.22'/%3E%3Crect x='708' y='135' width='12' height='8' fill='%234f8ef7' opacity='.15'/%3E%3C/svg%3E") center/cover no-repeat;
+    }
+
+    /* floating grid dots overlay */
+    .hero-grid {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(79,142,247,0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .hero-overlay {
+      position: relative; z-index: 2;
+      padding: 60px 48px 64px;
+      max-width: 680px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(79,142,247,0.12);
+      border: 1px solid rgba(79,142,247,0.25);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    .hero-title span { color: var(--accent); }
+
+    .hero-desc {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--subtle);
+      max-width: 500px;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+
+    .btn-primary:hover { opacity: 0.88; }
+
+    .btn-secondary {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* floating ghost mascot */
+    .hero-mascot {
+      position: absolute; right: 80px; bottom: 48px; z-index: 2;
+      animation: float 3.2s ease-in-out infinite;
+      display: none;
+    }
+
+    @media (min-width: 900px) { .hero-mascot { display: block; } }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-14px); }
+    }
+
+    /* ── FEATURES STRIP ── */
+    .features-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .feature-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 22px 28px;
+      border-right: 1px solid var(--border);
+    }
+
+    .feature-item:last-child { border-right: none; }
+
+    .feature-icon {
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+
+    .feature-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .feature-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── ABOUT SECTION ── */
+    .about-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      padding: 72px 48px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      .about-section { grid-template-columns: 1fr; padding: 48px 24px; }
+      .hero-overlay { padding: 40px 24px 48px; }
+      nav { padding: 14px 20px; }
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 16px;
+    }
+
+    .section-heading {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .section-body {
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--subtle);
+      margin-bottom: 8px;
+    }
+
+    .cta-row { margin-top: 28px; }
+
+    /* stat pills in about */
+    .about-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .about-stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 16px;
+    }
+
+    .about-stat-val {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+    }
+
+    .about-stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ── GAMEOVER BANNER ── */
+    .gameover-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 48px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gameover-section::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(79,142,247,0.06) 0%, transparent 70%);
+    }
+
+    .gameover-text-wrap { position: relative; z-index: 1; }
+
+    .go-line {
+      font-size: clamp(52px, 10vw, 100px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 0.9;
+      display: block;
+    }
+
+    .go-line.outline {
+      color: transparent;
+      -webkit-text-stroke: 1px var(--border);
+      font-size: clamp(48px, 9vw, 90px);
+      margin-top: 4px;
+    }
+
+    .go-line .accent { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-links { display: flex; gap: 24px; }
+
+    .footer-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--text); }
+
+    .footer-copy {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── PAGES (auth) ── */
+    .page {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--bg);
+      overflow-y: auto;
+    }
+
+    .page.active { display: flex; }
+
+    .auth-page {
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* grid dot background for auth */
+    .iso-bg {
+      position: absolute; inset: 0; overflow: hidden;
+    }
+
+    .iso-bg::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(79,142,247,0.07) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    .iso-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 65%);
+    }
+
+    /* floating SVG shapes: re-colour to blue/purple */
+    .iso-objects { position: absolute; inset: 0; pointer-events: none; }
+
+    .iso-obj {
+      position: absolute;
+      opacity: 0.07;
+      stroke: var(--accent) !important;
+      fill: none !important;
+    }
+
+    /* auth card */
+    .auth-card {
+      position: relative; z-index: 10;
+      width: 360px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+
+    .auth-logo {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .auth-logo span { color: var(--text); }
+
+    .auth-title {
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 28px;
+      color: var(--text);
+    }
+
+    .auth-field {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      padding: 11px 14px;
+      margin-bottom: 10px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .auth-field::placeholder { color: var(--muted); }
+    .auth-field:focus { border-color: var(--accent); }
+
+    .auth-submit {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 12px;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: opacity 0.2s;
+    }
+
+    .auth-submit:hover { opacity: 0.88; }
+
+    .auth-divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 18px 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .auth-social {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--subtle);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: all 0.2s;
+    }
+
+    .auth-social:hover { border-color: var(--accent); color: var(--text); }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .auth-switch a {
+      color: var(--accent);
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .auth-switch a:hover { text-decoration: underline; }
+
+    .page-back {
+      position: absolute; top: 20px; left: 24px; z-index: 20;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: border-color 0.2s;
+    }
+
+    .page-back:hover { border-color: var(--accent); color: var(--text); }
+
+    /* ── DASHBOARD ── */
+    .dashboard-page {
+      flex-direction: row;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      min-height: 100vh;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 24px 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      padding: 0 20px 20px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .sidebar-logo span { color: var(--text); }
+
+    .sidebar-profile {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 0 20px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+
+    .profile-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .profile-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .sidebar-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
+
+    .sidebar-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .sidebar-link:hover, .sidebar-link.active {
+      color: var(--text);
+      background: var(--card);
+      border-color: var(--border);
+    }
+
+    .sidebar-link.active { color: var(--accent); }
+    .sidebar-icon { font-size: 15px; }
+
+    .dashboard-main {
+      flex: 1;
+      padding: 32px 36px;
+      overflow-y: auto;
+      background: var(--bg);
+    }
+
+    .dash-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .dash-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .dash-xp-chip {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--amber);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover { border-color: var(--accent); }
+
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .stat-card:hover::before { opacity: 1; }
+
+    .stat-icon { font-size: 22px; margin-bottom: 10px; }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text);
+    }
+
+    .stat-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .progress-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-bottom: 16px;
+    }
+
+    .progress-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .progress-item { margin-bottom: 14px; }
+    .progress-item:last-child { margin-bottom: 0; }
+
+    .progress-top {
+      display: flex; justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: var(--subtle);
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+
+    /* scanline overlay — very subtle */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.015) 2px, rgba(0,0,0,0.015) 4px);
+    }
+
+    @media (max-width: 768px) {
+      .about-section { grid-template-columns: 1fr; padding: 48px 24px; }
+      footer { padding: 16px 24px; }
+      .features-strip { grid-template-columns: 1fr 1fr; }
+      .feature-item { border-right: none; border-bottom: 1px solid var(--border); }
+      .feature-item:last-child { border-bottom: none; }
+    }
+  </style>
 </head>
-
 <body>
 
-  <div class="container">
+<!-- ── SPLASH ── -->
+<div id="splash">
+  <div class="splash-logo">GAMIFY</span></div>
+  <div class="splash-sub">Web-Based Gamified E-Learning</div>
+  <div class="splash-bar"></div>
+</div>
 
-    <h1>🔐 Login</h1>
+<!-- ── MAIN SITE ── -->
+<div id="site">
 
-    <input type="email" id="loginEmail" placeholder="Email">
+  <!-- LANDING PAGE -->
+  <div id="landing-page">
 
-    <input type="password" id="loginPassword" placeholder="Password">
+    <nav>
+      <span class="nav-logo">GAMIFY</span></span>
+      <a class="nav-btn" onclick="showPage('signin')">Log In</a>
+      <a class="nav-btn primary" href="register.html">Get Started</a>
+    </nav>
 
-    <button onclick="login()">
-    Login
-    </button>
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-city"></div>
+      <div class="hero-grid"></div>
+      <div class="hero-overlay">
+        <div class="hero-eyebrow">⚡ SHS Gamified E-Learning · ICCT</div>
+        <div class="hero-title">
+          Level Up Your<br><span>Learning</span> Game
+        </div>
+        <div class="hero-desc">
+          GAMIFY turns your Senior High School subjects into an interactive adventure — earn XP, unlock badges, climb the leaderboard.
+        </div>
+        <div class="hero-actions">
+          <a class="btn-primary" href="register.html">Start for Free →</a>
+          <a class="btn-secondary" onclick="showPage('signin')">Log In</a>
+        </div>
+      </div>
 
-    <p>
-      No account?
+      <!-- Floating ghost mascot -->
+      <div class="hero-mascot">
+        <svg width="90" height="100" viewBox="0 0 80 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="20" y="10" width="40" height="55" rx="20" fill="#4f8ef7" opacity="0.85"/>
+          <rect x="20" y="55" width="10" height="15" fill="#4f8ef7" opacity="0.85"/>
+          <rect x="35" y="60" width="10" height="10" fill="#4f8ef7" opacity="0.85"/>
+          <rect x="50" y="55" width="10" height="15" fill="#4f8ef7" opacity="0.85"/>
+          <rect x="28" y="28" width="10" height="12" rx="5" fill="#0b1120"/>
+          <rect x="42" y="28" width="10" height="12" rx="5" fill="#0b1120"/>
+          <rect x="31" y="30" width="3" height="3" fill="white" opacity="0.6"/>
+          <rect x="45" y="30" width="3" height="3" fill="white" opacity="0.6"/>
+        </svg>
+      </div>
+    </div>
 
-      <a href="register.html">
-        Register
-      </a>
-    </p>
+    <!-- Feature strip -->
+    <div class="features-strip">
+      <div class="feature-item">
+        <div class="feature-icon">⚡</div>
+        <div>
+          <div class="feature-label">XP & Levels</div>
+          <div class="feature-sub">Earn points every lesson</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🏆</div>
+        <div>
+          <div class="feature-label">Leaderboard</div>
+          <div class="feature-sub">Compete with classmates</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎖️</div>
+        <div>
+          <div class="feature-label">Badges</div>
+          <div class="feature-sub">Unlock achievements</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div>
+          <div class="feature-label">Progress Tracking</div>
+          <div class="feature-sub">See your growth</div>
+        </div>
+      </div>
+    </div>
 
+    <!-- About section -->
+    <div class="about-section">
+      <div>
+        <div class="section-label">Our Purpose</div>
+        <div class="section-heading">Built to make learning actually engaging</div>
+        <div class="section-body">
+          GAMIFY is a web-based gamified e-learning system designed for Senior High School students at ICCT Colleges. We tackle low engagement in online and blended learning head-on — by turning every lesson into a game worth finishing.
+        </div>
+        <div class="section-body">
+          Students earn XP for completing lessons and quizzes, unlock badges for hitting milestones, and level up as they master each subject. No boring walls of text — just progress you can see.
+        </div>
+        <div class="cta-row">
+          <a class="btn-primary" href="register.html">Create Free Account</a>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">About the System</div>
+        <div class="about-stats">
+          <div class="about-stat">
+            <div class="about-stat-val">10+</div>
+            <div class="about-stat-label">Chapters & Lessons</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-val">5</div>
+            <div class="about-stat-label">Gamification Layers</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-val">IEEE</div>
+            <div class="about-stat-label">Research Standard</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-val">SHS</div>
+            <div class="about-stat-label">ICCT Students</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- "GAME OVER" decorative banner (re-themed) -->
+    <div class="gameover-section">
+      <div class="gameover-text-wrap">
+        <span class="go-line"><span class="accent">GAMIFY</span>
+        <span class="go-line outline">GAMIFIED · E-LEARNING · SHS</span>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footer-links">
+        <a href="#">Terms &amp; Conditions</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+      <div class="footer-copy">© 2025 — 2026 GAMIFY · ICCT Colleges</div>
+    </footer>
+  </div><!-- /landing-page -->
+
+  <!-- ── SIGN IN PAGE ── -->
+  <div id="signin" class="page auth-page">
+    <button class="page-back" onclick="showPage('landing')">← Back</button>
+    <div class="iso-bg">
+      <div class="iso-objects">
+        <svg class="iso-obj" style="top:5%;left:5%;width:180px" viewBox="0 0 100 80">
+          <polygon points="50,0 100,25 100,55 50,80 0,55 0,25" stroke-width="1"/>
+          <polygon points="50,10 90,30 90,50 50,70 10,50 10,30" stroke-width="0.5"/>
+        </svg>
+        <svg class="iso-obj" style="top:10%;right:8%;width:140px" viewBox="0 0 100 100" stroke-width="1">
+          <rect x="10" y="10" width="80" height="80" transform="rotate(45 50 50)"/>
+          <rect x="25" y="25" width="50" height="50" transform="rotate(45 50 50)"/>
+        </svg>
+        <svg class="iso-obj" style="bottom:15%;left:3%;width:200px" viewBox="0 0 120 100" stroke-width="0.8">
+          <ellipse cx="60" cy="50" rx="55" ry="40"/>
+          <ellipse cx="60" cy="50" rx="35" ry="25"/>
+          <line x1="60" y1="10" x2="60" y2="90"/>
+          <line x1="5" y1="50" x2="115" y2="50"/>
+        </svg>
+        <svg class="iso-obj" style="bottom:10%;right:5%;width:160px" viewBox="0 0 100 100" stroke-width="1">
+          <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5"/>
+          <line x1="50" y1="5" x2="50" y2="95"/>
+          <line x1="5" y1="27.5" x2="95" y2="72.5"/>
+          <line x1="95" y1="27.5" x2="5" y2="72.5"/>
+        </svg>
+      </div>
+    </div>
+    <div class="auth-card">
+      <div class="auth-logo">GAMIFY</span></div>
+      <div class="auth-title">Welcome back</div>
+      <input class="auth-field" type="text" placeholder="Username" id="signinUser"/>
+      <input class="auth-field" type="password" placeholder="Password" id="signinPass"/>
+      <div id="signinError" style="display:none;background:#1f0a0a;border:1px solid #7f1d1d;border-radius:8px;padding:10px 14px;font-size:13px;color:#fca5a5;margin-bottom:10px;"></div>
+      <button class="auth-submit" id="signinBtn" onclick="doLogin()">Log In</button>
+      <div class="auth-divider">or continue with</div>
+      <button class="auth-social">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Log in with Facebook
+      </button>
+      <button class="auth-social">
+        <svg width="15" height="15" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Log in with Google
+      </button>
+      <div class="auth-switch">No account yet? <a href="register.html">Sign up free</a></div>
+    </div>
   </div>
 
-  <script src="./script.js"></script>
+</div><!-- /site -->
 
+<script>
+  // ── SPLASH → LANDING ──
+  window.addEventListener('load', () => {
+    // If already logged in, skip landing and go straight to the right page
+    const token = localStorage.getItem('token');
+    const role  = localStorage.getItem('role');
+    if (token && role === 'student') { window.location.href = 'dashboard.html'; return; }
+    if (token && role === 'admin')   { window.location.href = 'admin.html';     return; }
+
+    setTimeout(() => {
+      const splash = document.getElementById('splash');
+      const site   = document.getElementById('site');
+      splash.classList.add('splash-exit');
+      site.classList.add('visible');
+      setTimeout(() => { splash.style.display = 'none'; }, 650);
+    }, 2600);
+  });
+
+  // ── PAGE NAV ──
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const lp = document.getElementById('landing-page');
+    if (id === 'landing') {
+      lp.style.display = 'block';
+    } else {
+      lp.style.display = 'none';
+      const page = document.getElementById(id);
+      if (page) page.classList.add('active');
+    }
+  }
+
+  // Show landing by default
+  document.getElementById('landing-page').style.display = 'block';
+
+  // ── REAL LOGIN ──
+  async function doLogin() {
+    const username = document.getElementById('signinUser').value.trim();
+    const password = document.getElementById('signinPass').value;
+    const errEl    = document.getElementById('signinError');
+    const btn      = document.getElementById('signinBtn');
+
+    errEl.style.display = 'none';
+
+    if (!username || !password) {
+      errEl.textContent = 'Please enter your username and password.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = 'Logging in...';
+
+    try {
+      const res  = await fetch('https://learnquest-backend-coku.onrender.com/login', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        errEl.textContent   = data.message || 'Invalid username or password.';
+        errEl.style.display = 'block';
+        btn.disabled        = false;
+        btn.textContent     = 'Log In';
+        return;
+      }
+
+      // Save session to localStorage
+      localStorage.setItem('token',    data.token);
+      localStorage.setItem('username', data.username || username);
+      localStorage.setItem('role',     data.role);
+      if (!localStorage.getItem('joinedDate')) {
+        localStorage.setItem('joinedDate', new Date().toLocaleDateString('en-US', { year:'numeric', month:'long' }));
+      }
+
+      // Redirect based on role
+      if (data.role === 'admin') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'dashboard.html';
+      }
+
+    } catch (err) {
+      errEl.textContent   = 'Cannot connect to server. Please try again.';
+      errEl.style.display = 'block';
+      btn.disabled        = false;
+      btn.textContent     = 'Log In';
+    }
+  }
+
+  // Allow pressing Enter to submit login
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const signin = document.getElementById('signin');
+      if (signin && signin.classList.contains('active')) doLogin();
+    }
+  });
+</script>
 </body>
 </html>

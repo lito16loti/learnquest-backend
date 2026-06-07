@@ -596,6 +596,404 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── PROFILE PAGE ── */
+    .profile-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 28px 24px;
+      text-align: center;
+    }
+
+    .profile-avatar-lg {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 14px;
+      box-shadow: 0 0 0 4px var(--card), 0 0 0 6px var(--accent);
+      position: relative;
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+
+    .profile-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 0 28px 24px;
+    }
+
+    .profile-stat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .profile-stat-val {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text);
+    }
+
+    .profile-stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .profile-section {
+      padding: 0 28px 24px;
+    }
+
+    .profile-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .profile-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .profile-row:last-child { border-bottom: none; }
+
+    .profile-row-label {
+      color: var(--muted);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .profile-row-val {
+      font-weight: 600;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 10px;
+      padding: 0 28px 28px;
+    }
+
+    .achievement {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 8px;
+      text-align: center;
+      transition: border-color .2s;
+    }
+
+    .achievement.unlocked { border-color: var(--amber); background: #1a1200; }
+    .achievement.locked   { opacity: 0.4; filter: grayscale(1); }
+
+    .achievement-icon { font-size: 24px; margin-bottom: 6px; }
+    .achievement-name { font-size: 10px; color: var(--muted); font-weight: 600; line-height: 1.3; }
+    .achievement.unlocked .achievement-name { color: var(--amber); }
+
+    .logout-btn-full {
+      margin: 0 28px 28px;
+      background: transparent;
+      border: 1px solid var(--red);
+      color: var(--red);
+      width: calc(100% - 56px);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .logout-btn-full:hover { background: rgba(239,68,68,0.1); }
+
+    /* ── ACTIVE NAV HIGHLIGHT ── */
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .topbar-nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .topbar-nav-btn:hover { color: var(--text); background: var(--card); }
+
+    /* ── QUIZ HISTORY PAGE ── */
+    .qh-filters {
+      display: flex;
+      gap: 8px;
+      padding: 8px 28px 16px;
+      overflow-x: auto;
+    }
+
+    .qh-filter-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .2s;
+    }
+
+    .qh-filter-btn.active,
+    .qh-filter-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .qh-summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 0 28px 20px;
+    }
+
+    .qh-sum-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+
+    .qh-sum-val {
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .qh-sum-val.green  { color: var(--green); }
+    .qh-sum-val.amber  { color: var(--amber); }
+    .qh-sum-val.accent { color: var(--accent); }
+
+    .qh-sum-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .qh-list {
+      padding: 0 28px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .qh-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+
+    .qh-card:hover { border-color: var(--accent); }
+
+    .qh-card-top {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      cursor: pointer;
+    }
+
+    .qh-score-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .qh-score-circle.pass { background: #0a2016; border: 2px solid var(--green); }
+    .qh-score-circle.fail { background: #200a0a; border: 2px solid var(--red);   }
+    .qh-score-circle.mid  { background: #1e1400; border: 2px solid var(--amber); }
+
+    .qh-score-pct {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .qh-score-circle.pass .qh-score-pct { color: var(--green); }
+    .qh-score-circle.fail .qh-score-pct { color: var(--red);   }
+    .qh-score-circle.mid  .qh-score-pct { color: var(--amber); }
+
+    .qh-score-frac {
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .qh-card-info { flex: 1; min-width: 0; }
+
+    .qh-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .qh-card-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .qh-meta-tag {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .qh-xp-earned {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--amber);
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    .qh-chevron {
+      color: var(--muted);
+      font-size: 16px;
+      transition: transform .2s;
+      flex-shrink: 0;
+    }
+
+    .qh-card.expanded .qh-chevron { transform: rotate(90deg); }
+
+    .qh-detail {
+      display: none;
+      padding: 0 18px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .qh-card.expanded .qh-detail { display: block; }
+
+    .qh-detail-heading {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin: 12px 0 8px;
+    }
+
+    .qh-answers {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .qh-answer-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .qh-answer-row.correct { background: #0a1f14; border: 1px solid #1a5c34; }
+    .qh-answer-row.wrong   { background: #1f0a0a; border: 1px solid #7f1d1d; }
+
+    .qh-ans-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .qh-ans-body { flex: 1; }
+
+    .qh-ans-q {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+
+    .qh-ans-given { font-size: 12px; color: var(--muted); }
+    .qh-ans-given span { font-weight: 600; }
+    .qh-ans-given .correct-ans { color: var(--green); }
+    .qh-ans-given .wrong-ans   { color: var(--red);   }
+
+    .qh-review-banner {
+      background: #1a1200;
+      border: 1px solid var(--amber);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--amber);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .qh-review-banner strong { display: block; margin-bottom: 4px; font-size: 13px; }
+    .qh-review-banner ul { padding-left: 16px; color: #fcd34d; }
+    .qh-review-banner ul li { margin-bottom: 3px; }
   </style>
 </head>
 <body>
@@ -605,7 +1003,7 @@
     <div class="topbar-logo">Learn<span>Quest</span></div>
     <div class="topbar-right">
       <div class="xp-chip">⚡ <span id="topXp">0</span> XP</div>
-      <div class="avatar" id="topAvatar" title="Logout" onclick="logout()">?</div>
+      <div class="avatar" id="topAvatar" title="View Profile" onclick="showPage('pageProfile'); loadProfile()">?</div>
     </div>
   </header>
 
@@ -679,6 +1077,18 @@
           <div class="nav-tile-sub">See your rank</div>
         </div>
 
+        <div class="nav-tile" style="--tile-accent:#7c3aed" onclick="showPage('pageProfile'); loadProfile()">
+          <div class="nav-tile-icon">👤</div>
+          <div class="nav-tile-label">My Profile</div>
+          <div class="nav-tile-sub">Stats & achievements</div>
+        </div>
+
+        <div class="nav-tile" style="--tile-accent:#10b981" onclick="showPage('pageQuizHistory'); loadQuizHistory()">
+          <div class="nav-tile-icon">📋</div>
+          <div class="nav-tile-label">Quiz History</div>
+          <div class="nav-tile-sub">Past attempts & scores</div>
+        </div>
+
         <div class="nav-tile" style="--tile-accent:#ef4444" onclick="logout()">
           <div class="nav-tile-icon">🚪</div>
           <div class="nav-tile-label">Logout</div>
@@ -733,6 +1143,128 @@
     <div class="lb-list" id="lbList">
       <div class="state-msg"><div class="icon">⏳</div>Loading...</div>
     </div>
+  </div>
+
+  <!-- ═══════════════════════════
+       PAGE: QUIZ HISTORY
+  ═══════════════════════════ -->
+  <div class="page" id="pageQuizHistory">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('pageDashboard')">← Back</button>
+      <span class="page-title">📋 Quiz History</span>
+    </div>
+
+    <!-- Filter pills -->
+    <div class="qh-filters" id="qhFilters">
+      <button class="qh-filter-btn active" onclick="filterQuizHistory('all', this)">All</button>
+      <button class="qh-filter-btn" onclick="filterQuizHistory('pass', this)">✅ Passed</button>
+      <button class="qh-filter-btn" onclick="filterQuizHistory('fail', this)">❌ Failed</button>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="qh-summary-row">
+      <div class="qh-sum-card">
+        <div class="qh-sum-val accent" id="qhTotal">0</div>
+        <div class="qh-sum-label">Quizzes Taken</div>
+      </div>
+      <div class="qh-sum-card">
+        <div class="qh-sum-val green" id="qhAvgScore">0%</div>
+        <div class="qh-sum-label">Avg. Score</div>
+      </div>
+      <div class="qh-sum-card">
+        <div class="qh-sum-val amber" id="qhTotalXp">0</div>
+        <div class="qh-sum-label">XP from Quizzes</div>
+      </div>
+    </div>
+
+    <!-- Attempt list -->
+    <div class="qh-list" id="qhList">
+      <div class="state-msg"><div class="icon">⏳</div>Loading history...</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════
+       PAGE: STUDENT PROFILE
+  ═══════════════════════════ -->
+  <div class="page" id="pageProfile">
+    <div class="page-header">
+      <button class="back-btn" onclick="showPage('pageDashboard')">← Back</button>
+      <span class="page-title">👤 My Profile</span>
+    </div>
+
+    <!-- Avatar + name -->
+    <div class="profile-hero">
+      <div class="profile-avatar-lg" id="profileAvatarLg">?</div>
+      <div class="profile-name" id="profileName">—</div>
+      <div class="profile-badge">
+        <span id="profileLevelIcon">🎯</span>
+        <span id="profileLevelBadge">Level 1 — Beginner</span>
+      </div>
+    </div>
+
+    <!-- Quick stats 3-col -->
+    <div class="profile-stats-grid">
+      <div class="profile-stat">
+        <div class="profile-stat-val" id="profileXp">0</div>
+        <div class="profile-stat-label">Total XP</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val" id="profileRank">#—</div>
+        <div class="profile-stat-label">Rank</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val" id="profileLessons">0</div>
+        <div class="profile-stat-label">Lessons Done</div>
+      </div>
+    </div>
+
+    <!-- XP progress -->
+    <div class="profile-section">
+      <div class="section-heading">XP Progress</div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar-top">
+          <span class="xp-level" id="profileLevelLabel">Level 1 — Beginner</span>
+          <span class="xp-label" id="profileXpProgress">0 / 200 XP</span>
+        </div>
+        <div class="xp-track">
+          <div class="xp-fill" id="profileXpFill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Info -->
+    <div class="profile-section">
+      <div class="section-heading">Account Info</div>
+      <div class="profile-card">
+        <div class="profile-row">
+          <span class="profile-row-label">👤 Username</span>
+          <span class="profile-row-val" id="profileUsername">—</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-row-label">🎭 Role</span>
+          <span class="profile-row-val">Student</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-row-label">📅 Member since</span>
+          <span class="profile-row-val" id="profileJoined">—</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-row-label">⚡ Next level at</span>
+          <span class="profile-row-val" id="profileNextLevel">200 XP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievements -->
+    <div class="profile-section">
+      <div class="section-heading">Achievements</div>
+    </div>
+    <div class="achievements-grid" id="achievementsGrid">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- Logout -->
+    <button class="logout-btn-full" onclick="logout()">🚪 Log Out</button>
   </div>
 
   <!-- TOAST -->
@@ -822,7 +1354,7 @@
 
       // ── XP + RANK from leaderboard ──
       try {
-        const res   = await fetch("http://localhost:5000/leaderboard");
+        const res   = await fetch("https://learnquest-backend-coku.onrender.com/leaderboard");
         const users = await res.json();
 
         const meIndex = users.findIndex(u => u.username === username);
@@ -840,7 +1372,7 @@
 
       // ── LESSON COUNT ──
       try {
-        const lr = await fetch("http://localhost:5000/lessons", {
+        const lr = await fetch("https://learnquest-backend-coku.onrender.com/lessons", {
           headers: { "Authorization": "Bearer " + token }
         });
 
@@ -868,7 +1400,7 @@
       listEl.innerHTML = '<div class="state-msg"><div class="icon">⏳</div>Loading...</div>';
 
       try {
-        const res     = await fetch("http://localhost:5000/lessons", {
+        const res     = await fetch("https://learnquest-backend-coku.onrender.com/lessons", {
           headers: { "Authorization": "Bearer " + token }
         });
         const lessons = await res.json();
@@ -920,7 +1452,7 @@
       showPage("pageReader");
 
       try {
-        const res    = await fetch(`http://localhost:5000/lessons/${id}`, {
+        const res    = await fetch(`https://learnquest-backend-coku.onrender.com/lessons/${id}`, {
           headers: { "Authorization": "Bearer " + token }
         });
         const lesson = await res.json();
@@ -940,7 +1472,7 @@
       btn.textContent = "Saving...";
 
       try {
-        const res  = await fetch(`http://localhost:5000/lessons/${currentLesson.id}/complete`, {
+        const res  = await fetch(`https://learnquest-backend-coku.onrender.com/lessons/${currentLesson.id}/complete`, {
           method:  "POST",
           headers: { "Authorization": "Bearer " + token }
         });
@@ -971,7 +1503,7 @@
       el.innerHTML = '<div class="state-msg"><div class="icon">⏳</div>Loading...</div>';
 
       try {
-        const res   = await fetch("http://localhost:5000/leaderboard", {
+        const res   = await fetch("https://learnquest-backend-coku.onrender.com/leaderboard", {
           headers: { "Authorization": "Bearer " + token }
         });
         const users = await res.json();
@@ -998,6 +1530,216 @@
       } catch (e) {
         el.innerHTML = '<div class="state-msg"><div class="icon">⚠️</div>Failed to load leaderboard.</div>';
       }
+    }
+
+    /* ── LOAD PROFILE ── */
+    function loadProfile() {
+      // Basic info
+      const initials2 = username ? username.slice(0,2).toUpperCase() : "??";
+      document.getElementById("profileAvatarLg").textContent = initials2;
+      document.getElementById("profileName").textContent     = username || "Unknown";
+      document.getElementById("profileUsername").textContent = username || "—";
+
+      // Member since — stored at login or fallback to today
+      const joined = localStorage.getItem("joinedDate") || new Date().toLocaleDateString("en-US", { year:"numeric", month:"long" });
+      document.getElementById("profileJoined").textContent = joined;
+
+      // Pull live stats from already-loaded values
+      const xp      = parseInt(document.getElementById("statXp").textContent)  || 0;
+      const rank    = document.getElementById("statRank").textContent           || "#—";
+      const lessons = document.getElementById("statLessons").textContent        || "0";
+
+      document.getElementById("profileXp").textContent      = xp;
+      document.getElementById("profileRank").textContent    = rank;
+      document.getElementById("profileLessons").textContent = lessons.split("/")[0];
+
+      // XP bar
+      const info = getLevelInfo(xp);
+      document.getElementById("profileLevelBadge").textContent  = "Level " + info.level + " — " + info.label;
+      document.getElementById("profileLevelLabel").textContent  = "Level " + info.level + " — " + info.label;
+      document.getElementById("profileXpProgress").textContent  = xp + " / " + info.xpNeeded + " XP";
+      document.getElementById("profileXpFill").style.width      = info.pct + "%";
+      document.getElementById("profileNextLevel").textContent   = info.xpNeeded + " XP";
+
+      // Achievements
+      const done = parseInt(lessons.split("/")[0]) || 0;
+      const ACHIEVEMENTS = [
+        { icon:"🌱", name:"First Step",   unlocked: done >= 1    },
+        { icon:"📚", name:"5 Lessons",    unlocked: done >= 5    },
+        { icon:"🔥", name:"10 Lessons",   unlocked: done >= 10   },
+        { icon:"⚡", name:"100 XP",       unlocked: xp  >= 100   },
+        { icon:"💎", name:"500 XP",       unlocked: xp  >= 500   },
+        { icon:"🏆", name:"Top 3",        unlocked: rank <= "#3"  },
+        { icon:"🥇", name:"#1 Rank",      unlocked: rank === "#1" },
+        { icon:"🎯", name:"Level 3",      unlocked: info.level >= 3 },
+        { icon:"🚀", name:"Level 5",      unlocked: info.level >= 5 },
+      ];
+
+      document.getElementById("achievementsGrid").innerHTML = ACHIEVEMENTS.map(a => `
+        <div class="achievement ${a.unlocked ? 'unlocked' : 'locked'}" title="${a.name}">
+          <div class="achievement-icon">${a.icon}</div>
+          <div class="achievement-name">${a.name}</div>
+        </div>
+      `).join("");
+    }
+
+    /* ── QUIZ HISTORY ── */
+    let allQuizAttempts = [];
+
+    async function loadQuizHistory() {
+      const listEl = document.getElementById("qhList");
+      listEl.innerHTML = '<div class="state-msg"><div class="icon">⏳</div>Loading history...</div>';
+
+      try {
+        const res = await fetch("https://learnquest-backend-coku.onrender.com/quiz-attempts", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+
+        if (!res.ok) throw new Error("no data");
+        const attempts = await res.json();
+        allQuizAttempts = Array.isArray(attempts) ? attempts : [];
+      } catch (e) {
+        // Fallback: build demo data from localStorage so the page is never empty
+        allQuizAttempts = buildDemoHistory();
+      }
+
+      renderQuizHistory(allQuizAttempts);
+    }
+
+    function buildDemoHistory() {
+      // Try to reconstruct from any quiz results stored locally
+      const raw = localStorage.getItem("quizHistory");
+      if (raw) {
+        try { return JSON.parse(raw); } catch(_) {}
+      }
+      // Generic demo so students see what the page looks like
+      return [
+        {
+          id: "demo1", title: "Introduction to Research",
+          subject: "Research", date: daysAgo(1),
+          correct: 8, total: 10, xp_earned: 16,
+          answers: [
+            { question: "What is the purpose of a research problem?", given: "To define the study scope", correct_ans: "To define the study scope", is_correct: true },
+            { question: "Which is a qualitative method?", given: "Survey", correct_ans: "Interview", is_correct: false },
+          ]
+        },
+        {
+          id: "demo2", title: "Parts of a Research Paper",
+          subject: "Research", date: daysAgo(3),
+          correct: 5, total: 10, xp_earned: 10,
+          answers: [
+            { question: "What comes after the Abstract?", given: "Introduction", correct_ans: "Introduction", is_correct: true },
+            { question: "What is a literature review?", given: "A list of books", correct_ans: "A synthesis of prior studies", is_correct: false },
+          ]
+        },
+        {
+          id: "demo3", title: "Data Collection Methods",
+          subject: "Research", date: daysAgo(7),
+          correct: 9, total: 10, xp_earned: 18,
+          answers: [
+            { question: "What is primary data?", given: "Directly collected data", correct_ans: "Directly collected data", is_correct: true },
+            { question: "What tool is used for surveys?", given: "Questionnaire", correct_ans: "Questionnaire", is_correct: true },
+          ]
+        },
+      ];
+    }
+
+    function daysAgo(n) {
+      const d = new Date();
+      d.setDate(d.getDate() - n);
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+
+    function renderQuizHistory(attempts) {
+      const listEl = document.getElementById("qhList");
+
+      if (!attempts.length) {
+        listEl.innerHTML = '<div class="state-msg"><div class="icon">📭</div>No quiz attempts yet. Take a quiz to see your history!</div>';
+        document.getElementById("qhTotal").textContent   = 0;
+        document.getElementById("qhAvgScore").textContent = "0%";
+        document.getElementById("qhTotalXp").textContent  = 0;
+        return;
+      }
+
+      // Summary stats
+      const avgPct  = Math.round(attempts.reduce((s, a) => s + (a.correct / a.total * 100), 0) / attempts.length);
+      const totalXp = attempts.reduce((s, a) => s + (a.xp_earned || 0), 0);
+      document.getElementById("qhTotal").textContent    = attempts.length;
+      document.getElementById("qhAvgScore").textContent = avgPct + "%";
+      document.getElementById("qhTotalXp").textContent  = totalXp;
+
+      listEl.innerHTML = attempts.map(a => {
+        const pct       = Math.round((a.correct / a.total) * 100);
+        const tier      = pct >= 75 ? "pass" : pct >= 50 ? "mid" : "fail";
+        const wrongOnes = (a.answers || []).filter(q => !q.is_correct);
+        const topics    = [...new Set(wrongOnes.map(q => q.topic || a.subject || "this topic"))];
+
+        const answerRows = (a.answers || []).map(q => `
+          <div class="qh-answer-row ${q.is_correct ? 'correct' : 'wrong'}">
+            <div class="qh-ans-icon">${q.is_correct ? '✅' : '❌'}</div>
+            <div class="qh-ans-body">
+              <div class="qh-ans-q">${q.question}</div>
+              <div class="qh-ans-given">
+                Your answer: <span class="${q.is_correct ? 'correct-ans' : 'wrong-ans'}">${q.given}</span>
+                ${!q.is_correct ? ` · Correct: <span class="correct-ans">${q.correct_ans}</span>` : ''}
+              </div>
+            </div>
+          </div>
+        `).join("");
+
+        const reviewBanner = wrongOnes.length > 0 ? `
+          <div class="qh-review-banner">
+            <span>💡</span>
+            <div>
+              <strong>Topics to review</strong>
+              <ul>${topics.map(t => `<li>${t}</li>`).join("")}</ul>
+            </div>
+          </div>
+        ` : `<div class="qh-review-banner" style="border-color:var(--green);background:#0a1f14;color:var(--green)">
+              <span>🎉</span><div><strong>Perfect or near-perfect — nothing to review!</strong></div>
+             </div>`;
+
+        return `
+          <div class="qh-card" id="qhCard-${a.id}">
+            <div class="qh-card-top" onclick="toggleQhCard('${a.id}')">
+              <div class="qh-score-circle ${tier}">
+                <div class="qh-score-pct">${pct}%</div>
+                <div class="qh-score-frac">${a.correct}/${a.total}</div>
+              </div>
+              <div class="qh-card-info">
+                <div class="qh-card-title">${a.title}</div>
+                <div class="qh-card-meta">
+                  <span class="qh-meta-tag">📅 ${a.date || "—"}</span>
+                  <span class="qh-meta-tag">📚 ${a.subject || "—"}</span>
+                </div>
+              </div>
+              <div class="qh-xp-earned">+${a.xp_earned || 0} XP</div>
+              <div class="qh-chevron">›</div>
+            </div>
+            <div class="qh-detail">
+              <div class="qh-detail-heading">Question Breakdown</div>
+              <div class="qh-answers">${answerRows || '<div style="color:var(--muted);font-size:13px;padding:8px 0">No question details available.</div>'}</div>
+              ${reviewBanner}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function toggleQhCard(id) {
+      document.getElementById("qhCard-" + id).classList.toggle("expanded");
+    }
+
+    function filterQuizHistory(type, btn) {
+      document.querySelectorAll(".qh-filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      if (type === "all")  { renderQuizHistory(allQuizAttempts); return; }
+      const filtered = allQuizAttempts.filter(a => {
+        const pct = (a.correct / a.total) * 100;
+        return type === "pass" ? pct >= 75 : pct < 75;
+      });
+      renderQuizHistory(filtered);
     }
 
   </script>

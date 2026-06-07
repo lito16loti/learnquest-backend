@@ -1,4 +1,4 @@
-const API = "http://localhost:5000";
+const API = "https://learnquest-backend-coku.onrender.com";
 
 /* =========================
    🔐 REGISTER
@@ -121,15 +121,6 @@ function authHeader() {
 function startQuiz() {
   window.location.href = "quiz.html";
 }
-
-/* =========================
-   ❓ QUIZ ENGINE
-========================= */
-
-let questions = [];
-let current   = 0;
-let score     = 0;
-let startTime = null;
 
 /* LOAD QUESTIONS */
 async function loadQuestions() {
