@@ -42,7 +42,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://frontend-lilac-two-10.vercel.app"
+    "https://frontend2-orcin-eight.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
