@@ -42,7 +42,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://frontend-two-pink-bf6jc7t0sq.vercel.app"
+    "https://feblue.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
