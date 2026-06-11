@@ -42,7 +42,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://fixx-psi.vercel.app"
+    "frontend-kappa-tawny-98.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
@@ -101,7 +101,7 @@ app.post("/register", async (req, res) => {
 
   try {
 
-    const { studentnumber, email, password } = req.body;
+    const { username, email, password } = req.body;
     const role = "student";
 
     // EMAIL VALIDATION
@@ -141,7 +141,7 @@ app.post("/register", async (req, res) => {
 
     // CREATE USER
     const newUser = new User({
-      studentnumber,
+      username,
       email,
       password: hashedPassword,
 
@@ -206,7 +206,7 @@ app.post("/login", async (req, res) => {
 res.json({
   message:  "Login successful",
   role:     user.role,
-  studentnumber: user.studentnumber,
+  username: user.username,
   token:    token
 });
 
@@ -341,7 +341,7 @@ app.post("/submit-score", verifyToken, async (req, res) => {
       { new: true }          // ✅ returns updated doc so we can confirm
     );
 
-    console.log(`✅ Score updated for ${updated.studentnumber}: total XP = ${updated.score}`);
+    console.log(`✅ Score updated for ${updated.username}: total XP = ${updated.score}`);
 
     res.json({
       message:   "Score saved",
@@ -366,7 +366,7 @@ app.get(
       await User.find({ role: "student" })  // ✅ exclude admins
       .sort({ score: -1 })
       .limit(10)
-      .select("studentnumber score email");       // ✅ only send needed fields
+      .select("username score email");       // ✅ only send needed fields
 
     res.json(users);
   }
