@@ -44,7 +44,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "frontend-kappa-tawny-98.vercel.app"
+    "https://his3.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
