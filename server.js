@@ -44,7 +44,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://h6-ten.vercel.app"
+    "https://seven-ten-phi.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
