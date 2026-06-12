@@ -30,6 +30,8 @@ const verifyToken =
 const isAdmin =
   require("./middleware/admin");
 
+const QuizHistory = require("./models/QuizHistory");
+
 const Lesson   = require("./models/Lesson");
 const Progress = require("./models/Progress");
 
@@ -42,7 +44,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://his2-iota.vercel.app"
+    "frontend-kappa-tawny-98.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
@@ -523,6 +525,42 @@ app.delete("/admin/lessons/:id", verifyToken, isAdmin, async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Delete failed" });
+  }
+});
+
+/* =====================
+   SAVE QUIZ HISTORY
+===================== */
+app.post("/quiz-history", verifyToken, async (req, res) => {
+  try {
+    const { score, total, xp_earned, time_taken, subject } = req.body;
+
+    await QuizHistory.create({
+      user_id: req.user.id,
+      score, total, xp_earned, time_taken,
+      subject: subject || "All"
+    });
+
+    res.json({ message: "History saved" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to save history" });
+  }
+});
+
+/* =====================
+   GET QUIZ HISTORY
+===================== */
+app.get("/quiz-history", verifyToken, async (req, res) => {
+  try {
+    const history = await QuizHistory.find({ user_id: req.user.id })
+      .sort({ taken_at: -1 })
+      .limit(20);
+
+    res.json(history);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Failed to load history" });
   }
 });
 
