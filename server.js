@@ -531,7 +531,7 @@ app.delete("/admin/lessons/:id", verifyToken, isAdmin, async (req, res) => {
 /* =====================
    SAVE QUIZ HISTORY
 ===================== */
-app.post("/quiz-history", verifyToken, async (req, res) => {
+app.post("/quiz-attempts", verifyToken, async (req, res) => {
   try {
     const { score, total, xp_earned, time_taken, subject } = req.body;
 
