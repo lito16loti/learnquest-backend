@@ -551,7 +551,7 @@ app.post("/quiz-history", verifyToken, async (req, res) => {
 /* =====================
    GET QUIZ HISTORY
 ===================== */
-app.get("/quiz-history", verifyToken, async (req, res) => {
+app.get("/quiz-attempts", verifyToken, async (req, res) => {
   try {
     const history = await QuizHistory.find({ user_id: req.user.id })
       .sort({ taken_at: -1 })
