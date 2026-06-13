@@ -44,7 +44,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://umayna.vercel.app"
+    "https://123-jet-phi-42.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
