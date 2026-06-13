@@ -44,7 +44,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://2-sigma-gules.vercel.app"
+    "https://3-azure-six.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
@@ -531,7 +531,7 @@ app.delete("/admin/lessons/:id", verifyToken, isAdmin, async (req, res) => {
 /* =====================
    SAVE QUIZ HISTORY
 ===================== */
-app.post("/quiz-history", verifyToken, async (req, res) => {
+app.post("/quiz-attempts", verifyToken, async (req, res) => {
   try {
     const { score, total, xp_earned, time_taken, subject } = req.body;
 
