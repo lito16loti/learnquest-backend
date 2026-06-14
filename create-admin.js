@@ -9,7 +9,7 @@ mongoose.connect(process.env.MONGO_URI).then(async () => {
 
   await User.create({
     username: "admin",
-    email:    "admin@learnquest.com",
+    email:    "admin@g4mify.com",
     password: hash,
     role:     "admin"
   });
