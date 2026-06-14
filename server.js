@@ -178,7 +178,7 @@ app.post("/login", async (req, res) => {
     const { studentNumber, password } = req.body;
 
     const user =
-      await User.findOne({ email });
+      await User.findOne({ studentNumber });
 
     if (!user) {
       return res.status(404).json({
