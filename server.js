@@ -44,7 +44,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://silver-lemur-537729.hostingersite.com"
+    "https://g4mify.com"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
