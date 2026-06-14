@@ -8,7 +8,7 @@ mongoose.connect(process.env.MONGO_URI).then(async () => {
   const hash = await bcrypt.hash("Admin@1234", 10);
 
   await User.create({
-    username: "admin",
+    studentNumber: "0000-00000",
     email:    "admin@g4mify.com",
     password: hash,
     role:     "admin"
