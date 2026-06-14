@@ -44,7 +44,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://127.0.0.1:5500",
-    "https://yawa-one.vercel.app"
+    "https://silver-lemur-537729.hostingersite.com"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
